@@ -9,11 +9,15 @@ const Container = styled.div``;
 
 interface InputBlocProps {
   title: string;
+  id: string;
+  type: "password" | "text";
+  onChange: ((event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+  value: string;
 }
 
-export default ({ title }: InputBlocProps) => (
+export default ({ title, ...rest }: InputBlocProps) => (
   <Container>
-    <Label>{title}</Label>
-    <Input />
+    <Label htmlFor={rest.id}>{title}</Label>
+    <Input {...rest} />
   </Container>
 );
