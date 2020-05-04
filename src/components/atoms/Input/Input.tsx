@@ -9,6 +9,9 @@ interface InputProps {
   value: string;
   type: "text" | "password";
   id?: string;
+  onKeyPress?:
+    | ((event: React.KeyboardEvent<HTMLInputElement>) => void)
+    | undefined;
 }
 
 export default ({ ...props }: InputProps) => <StyledInput {...props} />;

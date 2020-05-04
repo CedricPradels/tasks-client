@@ -7,4 +7,4 @@ export default {
   component: Tasks,
 };
 
-export const text = () => <Task>Task</Task>;
+export const text = () => <Task done={true}>Task</Task>;
