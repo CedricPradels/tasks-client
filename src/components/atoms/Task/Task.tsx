@@ -9,11 +9,13 @@ const StyledTask = styled.div`
   color: white;
   font-weight: bold;
   box-shadow: 0 0 5px black;
-  cursor: ${({ done }) => (done ? "not-allowed" : "pointer")};
+  cursor: pointer;
   text-decoration-line: ${({ done }: { done: boolean }) =>
     done ? "line-through" : "none"};
+  font-variant: small-caps;
 
   &:hover {
+    background-color: ${({ done }) => done && "red"};
     text-decoration-line: line-through;
   }
 `;

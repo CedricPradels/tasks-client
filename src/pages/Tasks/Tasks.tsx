@@ -10,13 +10,26 @@ import Title from "../../components/atoms/Title";
 import Input from "../../components/atoms/Input";
 import Task from "../../components/atoms/Task";
 
-const StyledTasks = styled.div``;
+const StyledTasks = styled.div`
+  width: 750px;
+  background-color: springgreen;
+  padding: 20px;
+  border-radius: 5px;
+`;
 
 const token = Cookies.get("token");
 
 const CREATE_TASK = gql`
   mutation Create($name: String, $token: String) {
     createTask(name: $name, token: $token) {
+      name
+    }
+  }
+`;
+
+const DELETE_TASK = gql`
+  mutation Delete($id: ID, $token: String) {
+    deleteTask(id: $id, token: $token) {
       name
     }
   }
@@ -50,6 +63,9 @@ export default () => {
     refetchQueries: [{ query: GET_TASKS, variables: { token } }],
   });
   const [updateTask] = useMutation(UPDATE_TASK, {
+    refetchQueries: [{ query: GET_TASKS, variables: { token } }],
+  });
+  const [deleteTask] = useMutation(DELETE_TASK, {
     refetchQueries: [{ query: GET_TASKS, variables: { token } }],
   });
 
@@ -90,7 +106,18 @@ export default () => {
           ))}
           <Title>Done</Title>
           {data.doneTasks.map(({ name, id }: any) => (
-            <Task done={true} key={id}>
+            <Task
+              done={true}
+              key={id}
+              onClick={() => {
+                deleteTask({
+                  variables: {
+                    id,
+                    token,
+                  },
+                });
+              }}
+            >
               {name}
             </Task>
           ))}
