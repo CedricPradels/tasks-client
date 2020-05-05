@@ -4,14 +4,14 @@ import { useHistory, Link } from "react-router-dom";
 import Cookies from "js-cookie";
 
 import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
+import { useLazyQuery } from "@apollo/react-hooks";
 
 import Form from "../../components/molecules/Form";
 import InputBloc from "../../components/molecules/InputBloc";
 
-const CREATE_USER = gql`
-  mutation($email: String, $password: String) {
-    register(email: $email, password: $password) {
+const LOGIN_USER = gql`
+  query($email: String, $password: String) {
+    login(email: $email, password: $password) {
       email
       token
     }
@@ -23,20 +23,26 @@ export default () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [createUser] = useMutation(CREATE_USER, {
-    onCompleted: (data) => {
-      Cookies.set("token", data.register.token);
-      history.push("/");
+  const [loginUser, { data }] = useLazyQuery(LOGIN_USER, {
+    onCompleted: async (data) => {
+      if (data.login !== null) {
+        console.log(data);
+        Cookies.set("token", data.login.token);
+        history.push("/");
+      } else {
+        setEmail("");
+        setPassword("");
+      }
     },
   });
 
   return (
     <>
       <Form
-        title="Register"
-        onSubmit={(e) => {
+        title="Login"
+        onSubmit={async (e) => {
           e.preventDefault();
-          createUser({ variables: { email, password } });
+          await loginUser({ variables: { email, password } });
         }}
       >
         <InputBloc
@@ -54,7 +60,7 @@ export default () => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </Form>
-      <Link to="/login">Go to login page.</Link>
+      <Link to="/register">Go to register page.</Link>
     </>
   );
 };

@@ -15,6 +15,8 @@ const StyledTasks = styled.div`
   background-color: springgreen;
   padding: 20px;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const token = Cookies.get("token");
