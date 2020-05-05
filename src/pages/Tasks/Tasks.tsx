@@ -19,8 +19,6 @@ const StyledTasks = styled.div`
   flex-direction: column;
 `;
 
-const token = Cookies.get("token");
-
 const CREATE_TASK = gql`
   mutation Create($name: String, $token: String) {
     createTask(name: $name, token: $token) {
@@ -59,6 +57,8 @@ const GET_TASKS = gql`
 `;
 
 export default () => {
+  const token = Cookies.get("token");
+
   const [task, setTask] = useState("");
   const { data, loading } = useQuery(GET_TASKS, { variables: { token } });
   const [createTask] = useMutation(CREATE_TASK, {
